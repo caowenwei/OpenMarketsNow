@@ -3,6 +3,7 @@ OpenMarketsNow is a simple tool to check capital market status around the globe.
 
 The site is built on [Jekyll](http://jekyllrb.com/) and hosted on [GitHub Pages](https://pages.github.com/). Its main dependencies are [DataTables](https://www.datatables.net/) and [Yahoo Finance](http://finance.yahoo.com/).
 
+Everything displayed is for information only. Data may be delayed by 15 minutes.
 
 #### ToDo
 1. More exchanges and index data
