@@ -1,0 +1,224 @@
+[
+  {
+   "name" : "New York Stock Exchange",
+   "tz"   : "America/New_York",
+   "open_local"  : "09:30",
+   "close_local" : "16:00",
+   "index_symbol" : "^GSPC",
+   "index_name" : "S&P 500"
+  },
+  {
+    "name" : "NASDAQ",
+    "tz"   : "America/New_York",
+    "open_local"  : "09:30",
+    "close_local" : "16:00",
+    "index_symbol" : "^IXIC",
+    "index_name" : "NASDAQ Composite"
+  },
+  {
+    "name" : "London Stock Exchange",
+    "tz"   : "Europe/London",
+    "open_local"  : "08:00",
+    "close_local" : "16:30",
+    "index_symbol" : "^FTSE",
+    "index_name" : "FTSE 100"
+  },
+  {
+    "name" : "Shanghai Stock Exchange",
+    "tz"   : "Asia/Shanghai",
+    "open_local"  : "09:30",
+    "close_local" : "15:00",
+    "lunch" : ["11:30","13:00"],
+    "index_symbol" : "000001.SS",
+    "index_name" : "SSE Composite"
+
+  },
+  {
+    "name" : "Shenzhen Stock Exchange",
+    "tz"   : "Asia/Shanghai",
+    "open_local"  : "09:30",
+    "close_local" : "15:00",
+    "lunch" : ["11:30","13:00"],
+    "index_symbol" : "399001.SZ",
+    "index_name" : "SZSE Component"
+  },
+  {
+    "name" : "Tokyo Stock Exchange",
+    "tz"   : "Asia/Tokyo",
+    "open_local"  : "09:00",
+    "close_local" : "15:00",
+    "lunch" : ["11:30","12:30"],
+    "index_symbol" : "^N225",
+    "index_name" : "Nikkei 225"
+  },
+  {
+    "name" : "Hong Kong Stock Exchange",
+    "tz"   : "Asia/Hong_Kong",
+    "open_local"  : "09:20",
+    "close_local" : "16:00",
+    "lunch" : ["12:00","13:00"],
+    "index_symbol" : "^HSI",
+    "index_name" : "HANG SENG"
+  },
+  {
+    "name" : "Euronext",
+    "tz"   : "Europe/Amsterdam",
+    "open_local"  : "09:00",
+    "close_local" : "17:30",
+    "index_symbol" : "^N100",
+    "index_name" : "Euronext 100"
+  },
+  {
+    "name" : "Toronto Stock Exchange",
+    "tz"   : "America/Toronto",
+    "open_local"  : "09:30",
+    "close_local" : "16:00",
+    "index_symbol" : "^GSPTSE",
+    "index_name" : "S&P/TSX Composite"
+  },
+  {
+    "name" : "Frankfurt Stock Exchange",
+    "tz"   : "Europe/Berlin",
+    "open_local"  : "08:00",
+    "close_local" : "22:00",
+    "index_symbol" : "^GDAXI",
+    "index_name" : "DAX"
+  },
+  {
+    "name" : "Bombay Stock Exchange",
+    "tz"   : "Asia/Kolkata",
+    "open_local"  : "09:15",
+    "close_local" : "15:30",
+    "index_symbol" : "^BSESN",
+    "index_name" : "S&P BSE SENSEX"
+  },
+  {
+    "name" : "National Stock Exchange of India",
+    "tz"   : "Asia/Kolkata",
+    "open_local"  : "09:15",
+    "close_local" : "15:30",
+    "index_symbol" : "^NSEI",
+    "index_name" : "CNX NIFTY"
+  },
+  {
+    "name" : "Taiwan Stock Exchange",
+    "tz"   : "Asia/Taipei",
+    "open_local"  : "09:00",
+    "close_local" : "13:30",
+    "index_symbol" : "^TWII",
+    "index_name" : "TSEC Weighted"
+  },
+  {
+    "name" : "SIX Swiss Exchange",
+    "tz"   : "Europe/Zurich",
+    "open_local"  : "09:00",
+    "close_local" : "17:30",
+    "index_symbol" : "^SSMI",
+    "index_name" : "Swiss Market"
+  },
+  {
+    "name" : "Australian Securities Exchange",
+    "tz"   : "Australia/Sydney",
+    "open_local"  : "09:50",
+    "close_local" : "16:12",
+    "index_symbol" : "^AXJO",
+    "index_name" : "S&P/ASX 200"
+  },
+  {
+    "name" : "Korea Stock Exchange",
+    "tz"   : "Asia/Seoul",
+    "open_local"  : "09:00",
+    "close_local" : "15:00",
+    "index_symbol" : "^KS11",
+    "index_name" : "KOSPI Composite"
+  },
+  {
+    "name" : "New Zealand Stock Market",
+    "tz"   : "Pacific/Auckland",
+    "open_local"  : "10:00",
+    "close_local" : "17:00",
+    "index_symbol" : "^NZ50",
+    "index_name" : "S&P/NZX 50"
+  },
+  {
+    "name" : "Singapore Exchange",
+    "tz"   : "Asia/Singapore",
+    "open_local"  : "09:00",
+    "close_local" : "17:00",
+    "index_symbol" : "^SGDOW",
+    "index_name" : "Dow Jones Singapore"
+  },
+  {
+    "name" : "Moscow Exchange",
+    "tz"   : "Europe/Moscow",
+    "open_local"  : "10:00",
+    "close_local" : "18:45",
+    "index_symbol" : "MICEXINDEXCF.ME",
+    "index_name" : "MICEX"
+  },
+  {
+    "name" : "Tel Aviv Stock Exchange",
+    "tz"   : "Asia/Tel_Aviv",
+    "open_local"  : "09:00",
+    "close_local" : "17:30",
+    "index_symbol" : "FT25.EX",
+    "index_name" : "TA-25"
+  },
+  {
+    "name" : "Istanbul Stock Exchange",
+    "tz"   : "Asia/Istanbul",
+    "open_local"  : "09:30",
+    "close_local" : "17:30",
+    "lunch" : ["12:30","14:00"],
+    "index_symbol" : "XU100.IS",
+    "index_name" : "BIST 100"
+  },
+  {
+    "name" : "Mexican Stock Exchange",
+    "tz"   : "America/Mexico_City",
+    "open_local"  : "08:30",
+    "close_local" : "15:00",
+    "index_symbol" : "^MXX",
+    "index_name" : "IPC"
+  },
+  {
+    "name" : "Irish Stock Exchange",
+    "tz"   : "Europe/Dublin",
+    "open_local"  : "08:00",
+    "close_local" : "16:30",
+    "index_symbol" : "^ISEQ",
+    "index_name" : "ISEQ Overall"
+  },
+  {
+    "name" : "Helsinki Stock Exchange",
+    "tz"   : "Europe/Helsinki",
+    "open_local"  : "10:00",
+    "close_local" : "18:30",
+    "index_symbol" : "^OMXH25",
+    "index_name" : "OMX Helsinki 25"
+  },
+  {
+    "name" : "Stockholm Stock Exchange",
+    "tz"   : "Europe/Stockholm",
+    "open_local"  : "09:00",
+    "close_local" : "17:30",
+    "index_symbol" : "^OMXS30",
+    "index_name" : "OMX Stockholm 30"
+  },
+  {
+    "name" : "Oslo Stock Exchange",
+    "tz"   : "Europe/Oslo",
+    "open_local"  : "09:00",
+    "close_local" : "16:30",
+    "index_symbol" : "OBX.OL",
+    "index_name" : "Oslo OBX"
+  },
+  {
+    "name" : "Copenhagen Stock Exchange",
+    "tz"   : "Europe/Copenhagen",
+    "open_local"  : "09:00",
+    "close_local" : "17:00",
+    "index_symbol" : "^OMXC20",
+    "index_name" : "OMX Copenhagen 20"
+  }
+]

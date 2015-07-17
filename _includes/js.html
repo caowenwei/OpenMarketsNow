@@ -1,0 +1,227 @@
+    <script src="{{ "/js/jquery.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/js/jquery.dataTables.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/js/dataTables.responsive.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/js/moment.min.js" | prepend: site.baseurl }}"></script>
+    <script src="{{ "/js/moment-timezone-with-data.min.js" | prepend: site.baseurl }}"></script>
+
+    <script src="{{ "/js/shCore.js" | prepend: site.baseurl }}" type="text/javascript"></script>
+    <script src="{{ "/js/demo.js" | prepend: site.baseurl }}"></script>
+
+    <script type="text/javascript" language="javascript" class="init">
+    $(document).ready(function() {
+	var table_data = [];
+  	var idx_symbol_id_map = {}; //assumes table_data is populated only once (and it can be updated later, keeping the orig order)
+	//api query string
+	var api_head = "http://finance.yahoo.com/webservice/v1/symbols/";
+    	var api_tail = "/quote?format=json&view=detail&callback=?";
+    	var api_symbols = [];
+    	var yahooAPI = "";
+    	
+	var table = $('#example').DataTable( {
+	  //responsive: true,
+	  "deferRender": true,
+	  "pageLength": 25,
+	  "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+	  "columns"    : [
+		{'data': 'exchange'},
+		{'data': 'status',
+		 'createdCell': function (td, cellData, rowData, row, col) {
+							if ( cellData === 'Open' ) {
+								$(td).addClass('highlightGreen');
+							}
+						}
+		},
+		{'data': 'index_name'},
+    {'data': 'index_value',
+    'render': function ( data, type, full, meta ) {
+                if (data === 0) {return '-';}//default case, index value can't be zero.
+
+                if (full.index_change_percent > 0) {return '<span class="textGreen">'+ data.toFixed(2) +'</span>';}
+                if (full.index_change_percent < 0) {return '<span class="textRed">'+ data.toFixed(2) +'</span>';}
+
+                return data.toFixed(2);
+              }
+    },
+    {'data': 'index_change_percent',
+      'render': function ( data, type, full, meta ) {
+      		  if (full.index_value === 0) {return '-';} //default case, index value can't be zero.
+                  if (data > 0) {return '<span class="textGreen">'+ (data.toFixed(2) + '%') +'</span>';}
+                  if (data < 0) {return '<span class="textRed">'+ (data.toFixed(2) + '%') +'</span>';}
+                  return (data.toFixed(2) + '%');
+                }
+     },
+		{'data': 'local_time_str'},
+		{'data': 'open'},
+		{'data': 'close'},
+		{'data': 'lunch'},
+		{'data': 'time_to_close'}
+
+	  ],
+	  "order":[[1,"desc"],[9,"asc"]]
+	} );
+
+	$.getJSON( "exchange_data.json", function(json) {
+		table_data = [];
+		var time_now = moment();
+		for(var i=0;i< json.length; i++){
+			var lunch_time = (json[i].hasOwnProperty('lunch')?(json[i].lunch[0] + '-' + json[i].lunch[1]):'No');
+			//update status
+			var status = 'Open';
+			var time_to_close = '-';
+			var time_diff = null;
+			var local_time = time_now.tz(json[i].tz);
+			var local_open = moment(local_time);
+			local_open.hour(parseInt(json[i].open_local.slice(0,2)));
+			local_open.minute(parseInt(json[i].open_local.slice(-2)));
+			local_open.second(0);
+			local_open.millisecond(0);
+			var local_close = moment(local_time);
+			local_close.hour(parseInt(json[i].close_local.slice(0,2)));
+			local_close.minute(parseInt(json[i].close_local.slice(-2)));
+			local_close.second(0);
+			local_close.millisecond(0);
+			var local_lunch_start = null, local_lunch_end = null;
+			if (json[i].hasOwnProperty('lunch')) {
+			  local_lunch_start = moment(local_time);
+			  local_lunch_start.hour(parseInt(json[i].lunch[0].slice(0,2)));
+			  local_lunch_start.minute(parseInt(json[i].lunch[0].slice(-2)));
+			  local_lunch_start.second(0);
+			  local_lunch_start.millisecond(0);
+			  local_lunch_end = moment(local_time);
+			  local_lunch_end.hour(parseInt(json[i].lunch[1].slice(0,2)));
+			  local_lunch_end.minute(parseInt(json[i].lunch[1].slice(-2)));
+			  local_lunch_end.second(0);
+			  local_lunch_end.millisecond(0);
+			}
+			if (local_time.isoWeekday()>5) {//weekend
+			  status = 'Closed';
+			} else if (local_time.isBefore(local_open) || local_time.isAfter(local_close)) {//out of (open time, close time)
+			  status = 'Closed';
+			} else if ((local_lunch_start !== null) && (local_time.isAfter(local_lunch_start) && local_time.isBefore(local_lunch_end))) {//lunch time
+			  status = 'Lunch';
+			  time_diff = local_close.diff(local_time);
+			} else {
+			  status = 'Open';
+			  time_diff = local_close.diff(local_time);
+			}
+			if (time_diff!==null){
+			  time_diff += (60 * 1000);//just for display, add a minute
+			  var hh = Math.floor(time_diff /1000 / 60 / 60);
+			  if(hh < 10) {
+				hh = '0' + hh;
+			  }
+			  time_diff -= hh * 1000 * 60 * 60;
+			  var mm = Math.floor(time_diff /1000 / 60);
+			  if(mm < 10) {
+				mm = '0' + mm;
+			  }
+			  time_to_close = hh + ":" + mm;
+			}
+			table_data.push({
+			  'status': status,
+			  'exchange'  : json[i].name,
+			  'local_time_str' : local_time.format("MMM DD - ddd - HH:mm"),
+			  'open' : json[i].open_local,
+			  'close' : json[i].close_local,
+			  'lunch' : lunch_time,
+			  'time_to_close': time_to_close,
+        'index_symbol': json[i].index_symbol || '-',
+        'index_name': json[i].index_name || '-',
+        'index_value': 0,
+        'index_change_percent': 0,
+        //caching calcs
+        'local_open' : local_open,
+        'local_close' : local_close,
+        'local_lunch_start' : local_lunch_start,
+        'local_lunch_end' : local_lunch_end,
+        'tz': json[i].tz
+			});
+      if (json[i].index_symbol) {
+        idx_symbol_id_map[json[i].index_symbol] = i;
+      }
+      if (json[i].index_symbol) {
+        	api_symbols.push(json[i].index_symbol.replace('^', '%5E'));
+        }
+		}
+		yahooAPI = api_head + (api_symbols.join()) + api_tail;
+		table.clear().rows.add(table_data).draw();
+		continousUpdate();
+	});
+
+  function continousUpdate(){
+    //collect all symbols to make one callbac
+
+    //update static parts
+    var time_now = moment();
+    for(var i=0;i< table_data.length; i++){
+      var status = 'Open';
+      var time_to_close = '-';
+      var time_diff = null;
+      var local_time = time_now.tz(table_data[i].tz);
+
+      var local_open = table_data[i].local_open;
+      var local_close = table_data[i].local_close;
+      var local_lunch_start = table_data[i].local_lunch_start;
+      var local_lunch_end = table_data[i].local_lunch_end;
+      if (local_time.isoWeekday()>5) {//weekend
+        status = 'Closed';
+      } else if (local_time.isBefore(local_open) || local_time.isAfter(local_close)) {//out of (open time, close time)
+        status = 'Closed';
+      } else if ((local_lunch_start !== null) && (local_time.isAfter(local_lunch_start) && local_time.isBefore(local_lunch_end))) {//lunch time
+        status = 'Lunch';
+        time_diff = local_close.diff(local_time);
+      } else {
+        status = 'Open';
+        time_diff = local_close.diff(local_time);
+      }
+      if (time_diff!==null){
+        time_diff += (60 * 1000);//just for display, add a minute
+        var hh = Math.floor(time_diff /1000 / 60 / 60);
+        if(hh < 10) {
+        hh = '0' + hh;
+        }
+        time_diff -= hh * 1000 * 60 * 60;
+        var mm = Math.floor(time_diff /1000 / 60);
+        if(mm < 10) {
+        mm = '0' + mm;
+        }
+        time_to_close = hh + ":" + mm;
+      }
+      table_data[i].status = status;
+      table_data[i].local_time_str = local_time.format("MMM DD - ddd - HH:mm");
+      table_data[i].time_to_close = time_to_close;
+    }
+
+    //get data from api
+    //var yahooAPI = "http://finance.yahoo.com/webservice/v1/symbols/YHOO,AAPL,%5EDJI,%5EIXIC,%5EGSPC/quote?format=json&view=detail&callback=?";
+    //var yahooAPI = "http://finance.yahoo.com/webservice/v1/symbols/allcurrencies/quote?format=json&callback=?";
+    
+    //prep api query string
+
+    
+    //var yahooAPI = "http://finance.yahoo.com/webservice/v1/symbols/%5EGSPC,%5EIXIC,FT25.EX,000001.SS,399001.SZ/quote?format=json&view=detail&callback=?";
+    $.ajax({cache: true,
+            url: yahooAPI,
+            dataType: "json",
+            success: function(e) {
+              //console.log("yahoo api call success.");
+              //test
+              var idx_list = e.list.resources;
+              for(var i=0;i< idx_list.length; i++){
+              	table_data[ idx_symbol_id_map[idx_list[i].resource.fields.symbol] ].index_value = 
+              		Number(idx_list[i].resource.fields.price);
+              	table_data[ idx_symbol_id_map[idx_list[i].resource.fields.symbol] ].index_change_percent = 
+              		Number(idx_list[i].resource.fields.chg_percent);
+              }
+            },
+            complete: function(e) {
+              table.clear().rows.add(table_data).draw();
+              setTimeout(continousUpdate, 60000);
+            }
+            });
+
+  }
+
+
+} );
+  	</script>
